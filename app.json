@@ -4,11 +4,11 @@
     "slug": "plant-disease-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/planticon.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/cactus.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

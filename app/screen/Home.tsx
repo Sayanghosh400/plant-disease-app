@@ -4,6 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import * as ImagePicker from 'expo-image-picker';
 import BigButton from '../components/BigButton';
 import RotatingLoader from '../components/RotatingLoader';
+import * as FileSystem from 'expo-file-system';
 
 const Home = () => {
 
@@ -20,6 +21,7 @@ const Home = () => {
         });
 
         if (!result.canceled) {
+            console.log('Selected image URI:', result.assets[0].uri);
             setPlantImage(result.assets[0].uri);
         } else {
             alert('You did not select any image.');
@@ -28,29 +30,33 @@ const Home = () => {
 
     const handleSubmit = async () => {
         if (!plantImage) {
-          alert("No file selected");
-          return;
+            alert("No file selected");
+            return;
         }
-    
+
         setLoading(true);
         const formData = new FormData();
         formData.append('file', plantImage);
-    
+        console.log("Form", formData);
+
+
         try {
-          const response = await fetch('https://leaf-disease-detection-backend.onrender.com/process_input', {
-            method: 'POST',
-            body: formData,
-          });
-          const result = await response.json();
-          console.log('Result:', result);
-          setDiseaseResult(result.result);
+            const response = await fetch('https://leaf-disease-detection-backend.onrender.com/process_input', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            console.log("Result", result.result);
+            setDiseaseResult(result.result);
         } catch (error) {
-          console.error('Error uploading file:', error);
-          alert('Failed to upload file');
+            console.error('Error uploading file:', error);
+            alert('Failed to upload file');
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
+    };
+
+
 
     return (
         <ScrollView>
@@ -64,7 +70,7 @@ const Home = () => {
                         { opacity: 0.7 }
                     ]}
                 >
-                    <Text style={[styles.text, { fontSize: 25, position: 'absolute', marginTop: hp('36%'), alignSelf: 'center' }]}>Upload Image</Text>
+                    <Text style={[styles.text, { fontSize: 25, position: 'absolute', marginTop: hp('32%'), alignSelf: 'center' }]}>Upload Image</Text>
                     <Image
                         source=
                         {plantImage ?
@@ -91,7 +97,10 @@ const Home = () => {
                 </View>
 
             </View>
-            {loading && <RotatingLoader imageSource={require('../../assets/images/loader.jpg')} />}
+            {loading &&
+                <RotatingLoader imageSource={require('../../assets/images/loader.png')}
+                />
+            }
         </ScrollView>
     )
 }
@@ -105,16 +114,17 @@ const styles = StyleSheet.create({
         marginRight: wp('5%'),
     },
     img: {
-        width: wp('90%'),
-        height: hp('45%'),
+        width: wp('80%'),
+        height: hp('40%'),
         borderRadius: 20,
         elevation: 10,
     },
     imgContainer: {
-        marginTop: hp('10%'),
+        marginTop: hp('5%'),
+        borderRadius: 10,
         alignSelf: 'center',
         elevation: 10,
-        shadowColor: 'black',
+        shadowColor: 'green',
         shadowOpacity: 1,
         shadowOffset: { width: 0, height: 10 },
         shadowRadius: 10,
@@ -127,14 +137,14 @@ const styles = StyleSheet.create({
     },
     resultContainer: {
         marginTop: hp('5%'),
-        marginBottom: hp('5%'),
+        marginBottom: hp('10%'),
         padding: 20,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
         borderRadius: 10,
         elevation: 10,
-        shadowColor: 'black',
+        shadowColor: 'green',
         shadowOpacity: 1,
         shadowOffset: { width: 0, height: 10 },
         shadowRadius: 10,
