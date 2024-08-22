@@ -35,16 +35,29 @@ const Home = () => {
         }
 
         setLoading(true);
-        const formData = new FormData();
-        formData.append('file', plantImage);
-        console.log("Form", formData);
-
 
         try {
+            const fileInfo = await FileSystem.getInfoAsync(plantImage);
+            const fileUri = fileInfo.uri;
+            const fileName = fileUri.split('/').pop() || 'uploaded_image';
+            const fileType = fileName.split('.').pop() || 'jpeg';
+
+            // Create a FormData object and append the file information
+            const formData = new FormData();
+            formData.append('file', {
+                uri: fileUri,
+                name: fileName,
+                type: `image/${fileType}`,
+            } as any);  // Cast to `any` to bypass TypeScript error
+
             const response = await fetch('https://leaf-disease-detection-backend.onrender.com/process_input', {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
+
             const result = await response.json();
             console.log("Result", result.result);
             setDiseaseResult(result.result);
@@ -90,7 +103,6 @@ const Home = () => {
 
                 <View style={styles.resultContainer}>
                     <Text style={[styles.text, { color: '#355E3B', marginBottom: hp('2%') }]}>Result will be displayed here</Text>
-                    <Text style={[styles.text, { color: '#2E8B57' }]}>Detected Disease:</Text>
                     <Text style={[styles.text, { color: '#2E8B57' }]}>{diseaseResult}</Text>
                     <Text style={[styles.text, { color: '#2E8B57' }]}>Solution :</Text>
                     <Text style={[styles.text, { color: '#2E8B57' }]}>loremsadsadsadada</Text>
