@@ -21,7 +21,6 @@ const Home = () => {
         });
 
         if (!result.canceled) {
-            console.log('Selected image URI:', result.assets[0].uri);
             setPlantImage(result.assets[0].uri);
         } else {
             alert('You did not select any image.');
@@ -97,15 +96,24 @@ const Home = () => {
                 <BigButton
                     buttontxt="Detect Disease"
                     onPress={() => handleSubmit()}
-                    styling={{ marginTop: hp('5%') }}
+                    styling={[{ marginBottom: hp('10%') }]}
                     isDisabled={plantImage ? false : true}
                 />
 
-                <View style={styles.resultContainer}>
-                    <Text style={[styles.text, { color: '#355E3B', marginBottom: hp('2%') }]}>Result will be displayed here</Text>
-                    <Text style={[styles.text, { color: '#2E8B57' }]}>{diseaseResult}</Text>
-                    <Text style={[styles.text, { color: '#2E8B57' }]}>Solution :</Text>
-                    <Text style={[styles.text, { color: '#2E8B57' }]}>loremsadsadsadada</Text>
+                <View style={!loading ? [{ height: hp('60%') }]: [{ height: hp('45%') }]}>
+                    {diseaseResult && !loading &&
+                        <View style={styles.resultContainer}>
+
+                            <Text style={[styles.text, { color: '#2E8B57' }]}>{diseaseResult}</Text>
+                            <Text style={[styles.text, { color: '#2E8B57', marginTop: hp('2%'), marginBottom: hp('2%') }]}>Here are some solutions:</Text>
+
+                            <Text style={styles.solutionText}>a. Ensure proper watering and avoid overwatering.</Text>
+                            <Text style={styles.solutionText}>b. Remove and dispose of infected leaves.</Text>
+                            <Text style={styles.solutionText}>c. Apply organic fungicide if necessary.</Text>
+                            <Text style={styles.solutionText}>d. Maintain good air circulation around the plants.</Text>
+
+                        </View>
+                    }
                 </View>
 
             </View>
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     resultContainer: {
-        marginTop: hp('5%'),
+        marginTop: hp('2%'),
         marginBottom: hp('10%'),
         padding: 20,
         alignItems: 'center',
@@ -165,6 +173,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    solutionText: {
+        fontSize: 17,
+        color: '#478778',
+        marginTop: hp('1%'),
+        width: wp('70%'),
     },
 
 })
